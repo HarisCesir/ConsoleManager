@@ -1,0 +1,716 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ConsoleDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Cjenovnik">
+          <Key>
+            <PropertyRef Name="CjenovnikID" />
+          </Key>
+          <Property Name="CjenovnikID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Konzola" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Vrijeme_od" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Vrijeme_do" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Cijena" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="konzola">
+          <Key>
+            <PropertyRef Name="konzolaID" />
+          </Key>
+          <Property Name="konzolaID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="pozicija" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="naziv" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="korisnici">
+          <Key>
+            <PropertyRef Name="KorisnikID" />
+          </Key>
+          <Property Name="KorisnikID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Ime" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Prezime" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="KorisnickoIme" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LozinkaHash" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="LozinkaSalt" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="IsAdmin" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ListaKonzola">
+          <Key>
+            <PropertyRef Name="ListaKonzolaID" />
+          </Key>
+          <Property Name="ListaKonzolaID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Naziv" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="manager">
+          <Key>
+            <PropertyRef Name="managerID" />
+          </Key>
+          <Property Name="managerID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="korisnikID" Type="int" Nullable="false" />
+          <Property Name="datum" Type="datetime" Nullable="false" />
+          <Property Name="konzolaID" Type="int" Nullable="false" />
+          <Property Name="pocetnoVrijme" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Zavrsetak" Type="nvarchar" MaxLength="50" />
+          <Property Name="Totaltime" Type="nvarchar" MaxLength="50" />
+          <Property Name="cijena" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="status" Type="bit" />
+        </EntityType>
+        <Association Name="FK_manager_konzola">
+          <End Role="konzola" Type="Self.konzola" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="manager" Type="Self.manager" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="konzola">
+              <PropertyRef Name="konzolaID" />
+            </Principal>
+            <Dependent Role="manager">
+              <PropertyRef Name="konzolaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="BrisiKonzolu" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="KonzolaID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="BrisiListaKonzola" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="KonzolaID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="CheckStatusKonzole" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="KonzolaID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="CijenCjenovnik" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="VrijemeOD" Type="time" Mode="In" />
+          <Parameter Name="VrijemeDO" Type="time" Mode="In" />
+        </Function>
+        <Function Name="DeleteIzvjesta" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DatumOD" Type="datetime" Mode="In" />
+          <Parameter Name="DatumDO" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="DodajKonzolu" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Pozicija" Type="nvarchar" Mode="In" />
+          <Parameter Name="Naziv" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="InsertCjenovnik" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Konzola" Type="nvarchar" Mode="In" />
+          <Parameter Name="VrijemeOD" Type="nvarchar" Mode="In" />
+          <Parameter Name="VrijemeDO" Type="nvarchar" Mode="In" />
+          <Parameter Name="Cijena" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="InsertKonzole" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Naziv" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="insertkorisnici" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Ime" Type="nvarchar" Mode="In" />
+          <Parameter Name="prezime" Type="nvarchar" Mode="In" />
+          <Parameter Name="korisnikoime" Type="nvarchar" Mode="In" />
+          <Parameter Name="lozinkaSalt" Type="nvarchar" Mode="In" />
+          <Parameter Name="lozinkaHash" Type="nvarchar" Mode="In" />
+          <Parameter Name="IsAdmin" Type="bit" Mode="In" />
+        </Function>
+        <Function Name="IzvjestajPoDatumu" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="DatumOD" Type="datetime" Mode="In" />
+          <Parameter Name="DatumDo" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="KonzolaPoTV" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="pozicija" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="konzoleTV1" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="konzoleTV10" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="konzoleTV11" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="konzoleTV12" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="konzoleTV2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="konzoleTV3" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="konzoleTV4" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="konzoleTV5" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="konzoleTV6" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="konzoleTV7" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="konzoleTV8" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="konzoleTV9" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="obrisiCjenovnik" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CjenovnikID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="SelectAllKonzole" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="selectByKorisnickoIme" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Korisnickoime" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="SELECTCjenovnik" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="SelectCjenovnikByID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CjenovnikID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="SveKonzole" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="TEst" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="Ugasi" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="UgasiSve" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="managerID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="upaljena" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="korisnikID" Type="int" Mode="In" />
+          <Parameter Name="datum" Type="datetime" Mode="In" />
+          <Parameter Name="konzolaID" Type="int" Mode="In" />
+          <Parameter Name="pocetnovrijeme" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="upaljena2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="korisnikID" Type="int" Mode="In" />
+          <Parameter Name="datum" Type="nvarchar" Mode="In" />
+          <Parameter Name="konzolaID" Type="int" Mode="In" />
+          <Parameter Name="pocetnovrijeme" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="upapljeno" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="UpdataCjenovnik" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="CjenovnikID" Type="int" Mode="In" />
+          <Parameter Name="Cijena" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="updateManager" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="managerID" Type="int" Mode="In" />
+          <Parameter Name="zavrsetak" Type="nvarchar" Mode="In" />
+          <Parameter Name="totalTIme" Type="nvarchar" Mode="In" />
+          <Parameter Name="cijena" Type="money" Mode="In" />
+        </Function>
+        <EntityContainer Name="ConsoleDatabaseModelStoreContainer">
+          <EntitySet Name="Cjenovnik" EntityType="Self.Cjenovnik" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="konzola" EntityType="Self.konzola" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="korisnici" EntityType="Self.korisnici" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ListaKonzola" EntityType="Self.ListaKonzola" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="manager" EntityType="Self.manager" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_manager_konzola" Association="Self.FK_manager_konzola">
+            <End Role="konzola" EntitySet="konzola" />
+            <End Role="manager" EntitySet="manager" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ConsoleDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="konzola">
+          <Key>
+            <PropertyRef Name="konzolaID" />
+          </Key>
+          <Property Name="konzolaID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="pozicija" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="naziv" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="konzola1" Relationship="Self.FK_konzola_konzola" FromRole="konzola" ToRole="konzola1" />
+          <NavigationProperty Name="konzola2" Relationship="Self.FK_konzola_konzola" FromRole="konzola1" ToRole="konzola" />
+          <NavigationProperty Name="manager" Relationship="Self.FK_manager_konzola" FromRole="konzola" ToRole="manager" />
+        </EntityType>
+        <EntityType Name="korisnici">
+          <Key>
+            <PropertyRef Name="KorisnikID" />
+          </Key>
+          <Property Name="KorisnikID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Ime" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Prezime" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="KorisnickoIme" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LozinkaHash" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LozinkaSalt" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="manager" Relationship="Self.FK_manager_korisnici" FromRole="korisnici" ToRole="manager" />
+          <Property Name="IsAdmin" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="manager">
+          <Key>
+            <PropertyRef Name="managerID" />
+          </Key>
+          <Property Name="managerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="korisnikID" Type="Int32" Nullable="false" />
+          <Property Name="datum" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="konzolaID" Type="Int32" Nullable="false" />
+          <Property Name="pocetnoVrijme" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Zavrsetak" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Totaltime" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="cijena" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="status" Type="Boolean" />
+          <NavigationProperty Name="konzola" Relationship="Self.FK_manager_konzola" FromRole="manager" ToRole="konzola" />
+          <NavigationProperty Name="korisnici" Relationship="Self.FK_manager_korisnici" FromRole="manager" ToRole="korisnici" />
+        </EntityType>
+        <Association Name="FK_konzola_konzola">
+          <End Role="konzola" Type="Self.konzola" Multiplicity="1" />
+          <End Role="konzola1" Type="Self.konzola" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="konzola">
+              <PropertyRef Name="konzolaID" />
+            </Principal>
+            <Dependent Role="konzola1">
+              <PropertyRef Name="konzolaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_manager_konzola">
+          <End Role="konzola" Type="Self.konzola" Multiplicity="1" />
+          <End Role="manager" Type="Self.manager" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="konzola">
+              <PropertyRef Name="konzolaID" />
+            </Principal>
+            <Dependent Role="manager">
+              <PropertyRef Name="konzolaID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_manager_korisnici">
+          <End Role="korisnici" Type="Self.korisnici" Multiplicity="1" />
+          <End Role="manager" Type="Self.manager" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="korisnici">
+              <PropertyRef Name="KorisnikID" />
+            </Principal>
+            <Dependent Role="manager">
+              <PropertyRef Name="korisnikID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ConsoleDatabaseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="konzola" EntityType="Self.konzola" />
+          <EntitySet Name="korisnici" EntityType="Self.korisnici" />
+          <EntitySet Name="manager" EntityType="Self.manager" />
+          <AssociationSet Name="FK_konzola_konzola" Association="Self.FK_konzola_konzola">
+            <End Role="konzola" EntitySet="konzola" />
+            <End Role="konzola1" EntitySet="konzola" />
+          </AssociationSet>
+          <AssociationSet Name="FK_manager_konzola" Association="Self.FK_manager_konzola">
+            <End Role="konzola" EntitySet="konzola" />
+            <End Role="manager" EntitySet="manager" />
+          </AssociationSet>
+          <AssociationSet Name="FK_manager_korisnici" Association="Self.FK_manager_korisnici">
+            <End Role="korisnici" EntitySet="korisnici" />
+            <End Role="manager" EntitySet="manager" />
+          </AssociationSet>
+          <FunctionImport Name="insertkorisnici">
+            <Parameter Name="Ime" Mode="In" Type="String" />
+            <Parameter Name="prezime" Mode="In" Type="String" />
+            <Parameter Name="korisnikoime" Mode="In" Type="String" />
+            <Parameter Name="lozinkaSalt" Mode="In" Type="String" />
+            <Parameter Name="lozinkaHash" Mode="In" Type="String" />
+            <Parameter Name="IsAdmin" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="konzoleTV1" EntitySet="konzola" ReturnType="Collection(ConsoleDatabaseModel.konzola)" />
+          <FunctionImport Name="selectByKorisnickoIme" EntitySet="korisnici" ReturnType="Collection(ConsoleDatabaseModel.korisnici)">
+          <Parameter Name="Korisnickoime" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="upaljena">
+            <Parameter Name="korisnikID" Mode="In" Type="Int32" />
+            <Parameter Name="datum" Mode="In" Type="DateTime" />
+            <Parameter Name="konzolaID" Mode="In" Type="Int32" />
+            <Parameter Name="pocetnovrijeme" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="upapljeno" ReturnType="Collection(ConsoleDatabaseModel.upapljeno_Result)" />
+          <FunctionImport Name="updateManager">
+            <Parameter Name="managerID" Mode="In" Type="Int32" />
+            <Parameter Name="zavrsetak" Mode="In" Type="String" />
+            <Parameter Name="totalTIme" Mode="In" Type="String" />
+            <Parameter Name="cijena" Mode="In" Type="Decimal" />
+          </FunctionImport>
+          <FunctionImport Name="SelectAllKonzole" EntitySet="konzola" ReturnType="Collection(ConsoleDatabaseModel.konzola)" />
+          <EntitySet Name="Cjenovnik" EntityType="ConsoleDatabaseModel.Cjenovnik" />
+          <FunctionImport Name="InsertCjenovnik">
+            <Parameter Name="Konzola" Mode="In" Type="String" />
+            <Parameter Name="VrijemeOD" Mode="In" Type="String" />
+            <Parameter Name="VrijemeDO" Mode="In" Type="String" />
+            <Parameter Name="Cijena" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SELECTCjenovnik" EntitySet="Cjenovnik" ReturnType="Collection(ConsoleDatabaseModel.Cjenovnik)" />
+          <FunctionImport Name="SelectCjenovnikByID" EntitySet="Cjenovnik" ReturnType="Collection(ConsoleDatabaseModel.Cjenovnik)">
+          <Parameter Name="CjenovnikID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="obrisiCjenovnik">
+          <Parameter Name="CjenovnikID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="UpdataCjenovnik">
+            <Parameter Name="CjenovnikID" Mode="In" Type="Int32" />
+            <Parameter Name="Cijena" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="UgasiSve" >
+          <Parameter Name="managerID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="CheckStatusKonzole" ReturnType="Collection(ConsoleDatabaseModel.CheckStatusKonzole_Result)">
+          <Parameter Name="KonzolaID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="konzoleTV2" EntitySet="konzola" ReturnType="Collection(ConsoleDatabaseModel.konzola)" />
+          <FunctionImport Name="konzoleTV3" EntitySet="konzola" ReturnType="Collection(ConsoleDatabaseModel.konzola)" />
+          <FunctionImport Name="konzoleTV4" EntitySet="konzola" ReturnType="Collection(ConsoleDatabaseModel.konzola)" />
+          <FunctionImport Name="konzoleTV5" EntitySet="konzola" ReturnType="Collection(ConsoleDatabaseModel.konzola)" />
+          <FunctionImport Name="upaljena2">
+            <Parameter Name="korisnikID" Mode="In" Type="Int32" />
+            <Parameter Name="datum" Mode="In" Type="String" />
+            <Parameter Name="konzolaID" Mode="In" Type="Int32" />
+            <Parameter Name="pocetnovrijeme" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="konzoleTV10" EntitySet="konzola" ReturnType="Collection(ConsoleDatabaseModel.konzola)" />
+          <FunctionImport Name="konzoleTV11" EntitySet="konzola" ReturnType="Collection(ConsoleDatabaseModel.konzola)" />
+          <FunctionImport Name="konzoleTV12" EntitySet="konzola" ReturnType="Collection(ConsoleDatabaseModel.konzola)" />
+          <FunctionImport Name="konzoleTV6" EntitySet="konzola" ReturnType="Collection(ConsoleDatabaseModel.konzola)" />
+          <FunctionImport Name="konzoleTV7" EntitySet="konzola" ReturnType="Collection(ConsoleDatabaseModel.konzola)" />
+          <FunctionImport Name="konzoleTV8" EntitySet="konzola" ReturnType="Collection(ConsoleDatabaseModel.konzola)" />
+          <FunctionImport Name="konzoleTV9" EntitySet="konzola" ReturnType="Collection(ConsoleDatabaseModel.konzola)" />
+          <FunctionImport Name="DodajKonzolu">
+            <Parameter Name="Pozicija" Mode="In" Type="String" />
+            <Parameter Name="Naziv" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="KonzolaPoTV" EntitySet="konzola" ReturnType="Collection(ConsoleDatabaseModel.konzola)">
+          <Parameter Name="pozicija" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="BrisiKonzolu">
+          <Parameter Name="KonzolaID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="ListaKonzola" EntityType="ConsoleDatabaseModel.ListaKonzola" />
+          <FunctionImport Name="InsertKonzole">
+          <Parameter Name="Naziv" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SveKonzole" EntitySet="ListaKonzola" ReturnType="Collection(ConsoleDatabaseModel.ListaKonzola)" />
+          <FunctionImport Name="IzvjestajPoDatumu" ReturnType="Collection(ConsoleDatabaseModel.IzvjestajPoDatumu_Result)">
+            <Parameter Name="DatumOD" Mode="In" Type="DateTime" />
+            <Parameter Name="DatumDo" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="TEst" ReturnType="Collection(ConsoleDatabaseModel.TEst_Result)" />
+          <FunctionImport Name="BrisiListaKonzola">
+          <Parameter Name="KonzolaID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="CijenCjenovnik">
+            <Parameter Name="VrijemeOD" Mode="In" Type="Time" />
+            <Parameter Name="VrijemeDO" Mode="In" Type="Time" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteIzvjesta">
+            <Parameter Name="DatumOD" Mode="In" Type="DateTime" />
+            <Parameter Name="DatumDO" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="Ugasi" />
+        </EntityContainer>
+        <ComplexType Name="konzoleTV1_Result">
+          <Property Type="Int32" Name="konzolaID" Nullable="false" />
+          <Property Type="String" Name="pozicija" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="naziv" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="selectByKorisnickoIme_Result">
+          <Property Type="Int32" Name="KorisnikID" Nullable="false" />
+          <Property Type="String" Name="Ime" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Prezime" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="KorisnickoIme" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="LozinkaHash" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="LozinkaSalt" Nullable="false" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="upapljeno_Result">
+          <Property Type="Int32" Name="managerID" Nullable="false" />
+          <Property Type="String" Name="pozicija" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="naziv" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="SelectAllKonzole_Result">
+          <Property Type="Int32" Name="konzolaID" Nullable="false" />
+          <Property Type="String" Name="pozicija" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="naziv" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <EntityType Name="Cjenovnik">
+          <Key>
+            <PropertyRef Name="CjenovnikID" />
+          </Key>
+          <Property Name="CjenovnikID" Type="Int32" Nullable="false" />
+          <Property Name="Konzola" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Vrijeme_od" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Vrijeme_do" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Cijena" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <ComplexType Name="SELECTCjenovnik_Result">
+          <Property Type="Int32" Name="CjenovnikID" Nullable="false" />
+          <Property Type="String" Name="Konzola" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Vrijeme_od" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Vrijeme_do" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Cijena" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="SelectCjenovnikByID_Result">
+          <Property Type="Int32" Name="CjenovnikID" Nullable="false" />
+          <Property Type="String" Name="Konzola" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Vrijeme_od" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Vrijeme_do" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Cijena" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="CheckStatusKonzole_Result">
+          <Property Type="Int32" Name="managerID" Nullable="false" />
+          <Property Type="Int32" Name="konzolaID" Nullable="false" />
+          <Property Type="String" Name="pocetnoVrijme" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Zavrsetak" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Totaltime" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="status" Nullable="true" />
+          <Property Type="String" Name="pozicija" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="naziv" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="konzoleTV2_Result">
+          <Property Type="Int32" Name="konzolaID" Nullable="false" />
+          <Property Type="String" Name="pozicija" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="naziv" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="konzoleTV3_Result">
+          <Property Type="Int32" Name="konzolaID" Nullable="false" />
+          <Property Type="String" Name="pozicija" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="naziv" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="konzoleTV4_Result">
+          <Property Type="Int32" Name="konzolaID" Nullable="false" />
+          <Property Type="String" Name="pozicija" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="naziv" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="konzoleTV5_Result">
+          <Property Type="Int32" Name="konzolaID" Nullable="false" />
+          <Property Type="String" Name="pozicija" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="naziv" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="konzoleTV10_Result">
+          <Property Type="Int32" Name="konzolaID" Nullable="false" />
+          <Property Type="String" Name="pozicija" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="naziv" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="konzoleTV11_Result">
+          <Property Type="Int32" Name="konzolaID" Nullable="false" />
+          <Property Type="String" Name="pozicija" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="naziv" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="konzoleTV12_Result">
+          <Property Type="Int32" Name="konzolaID" Nullable="false" />
+          <Property Type="String" Name="pozicija" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="naziv" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="konzoleTV6_Result">
+          <Property Type="Int32" Name="konzolaID" Nullable="false" />
+          <Property Type="String" Name="pozicija" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="naziv" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="konzoleTV7_Result">
+          <Property Type="Int32" Name="konzolaID" Nullable="false" />
+          <Property Type="String" Name="pozicija" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="naziv" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="konzoleTV8_Result">
+          <Property Type="Int32" Name="konzolaID" Nullable="false" />
+          <Property Type="String" Name="pozicija" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="naziv" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="konzoleTV9_Result">
+          <Property Type="Int32" Name="konzolaID" Nullable="false" />
+          <Property Type="String" Name="pozicija" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="naziv" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="KonzolaPoTV_Result">
+          <Property Type="Int32" Name="konzolaID" Nullable="false" />
+          <Property Type="String" Name="pozicija" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="naziv" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <EntityType Name="ListaKonzola">
+          <Key>
+            <PropertyRef Name="ListaKonzolaID" />
+          </Key>
+          <Property Name="ListaKonzolaID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Naziv" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <ComplexType Name="SveKonzole_Result">
+          <Property Type="Int32" Name="ListaKonzolaID" Nullable="false" />
+          <Property Type="String" Name="Naziv" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="IzvjestajPoDatumu_Result">
+          <Property Type="String" Name="Ime" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Prezime" Nullable="false" MaxLength="50" />
+          <Property Type="DateTime" Name="datum" Nullable="false" Precision="23" />
+          <Property Type="String" Name="pocetnoVrijme" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Zavrsetak" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Totaltime" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="cijena" Nullable="true" Precision="19" />
+          <Property Type="String" Name="pozicija" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="naziv" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="TEst_Result">
+          <Property Type="String" Name="Ime" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Prezime" Nullable="false" MaxLength="50" />
+          <Property Type="DateTime" Name="datum" Nullable="false" Precision="23" />
+          <Property Type="String" Name="pocetnoVrijme" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Zavrsetak" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Totaltime" Nullable="true" MaxLength="50" />
+          <Property Type="Decimal" Name="cijena" Nullable="true" Precision="19" />
+          <Property Type="String" Name="pozicija" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="naziv" Nullable="false" MaxLength="50" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ConsoleDatabaseModelStoreContainer" CdmEntityContainer="ConsoleDatabaseEntities">
+          <EntitySetMapping Name="konzola">
+            <EntityTypeMapping TypeName="ConsoleDatabaseModel.konzola">
+              <MappingFragment StoreEntitySet="konzola">
+                <ScalarProperty Name="konzolaID" ColumnName="konzolaID" />
+                <ScalarProperty Name="pozicija" ColumnName="pozicija" />
+                <ScalarProperty Name="naziv" ColumnName="naziv" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="korisnici">
+            <EntityTypeMapping TypeName="ConsoleDatabaseModel.korisnici">
+              <MappingFragment StoreEntitySet="korisnici">
+                <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />
+                <ScalarProperty Name="KorisnikID" ColumnName="KorisnikID" />
+                <ScalarProperty Name="Ime" ColumnName="Ime" />
+                <ScalarProperty Name="Prezime" ColumnName="Prezime" />
+                <ScalarProperty Name="KorisnickoIme" ColumnName="KorisnickoIme" />
+                <ScalarProperty Name="LozinkaHash" ColumnName="LozinkaHash" />
+                <ScalarProperty Name="LozinkaSalt" ColumnName="LozinkaSalt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="manager">
+            <EntityTypeMapping TypeName="ConsoleDatabaseModel.manager">
+              <MappingFragment StoreEntitySet="manager">
+                <ScalarProperty Name="managerID" ColumnName="managerID" />
+                <ScalarProperty Name="korisnikID" ColumnName="korisnikID" />
+                <ScalarProperty Name="datum" ColumnName="datum" />
+                <ScalarProperty Name="konzolaID" ColumnName="konzolaID" />
+                <ScalarProperty Name="pocetnoVrijme" ColumnName="pocetnoVrijme" />
+                <ScalarProperty Name="Zavrsetak" ColumnName="Zavrsetak" />
+                <ScalarProperty Name="Totaltime" ColumnName="Totaltime" />
+                <ScalarProperty Name="cijena" ColumnName="cijena" />
+                <ScalarProperty Name="status" ColumnName="status" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="insertkorisnici" FunctionName="ConsoleDatabaseModel.Store.insertkorisnici" />
+          <FunctionImportMapping FunctionImportName="konzoleTV1" FunctionName="ConsoleDatabaseModel.Store.konzoleTV1">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="selectByKorisnickoIme" FunctionName="ConsoleDatabaseModel.Store.selectByKorisnickoIme">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="upaljena" FunctionName="ConsoleDatabaseModel.Store.upaljena" />
+          <FunctionImportMapping FunctionImportName="upapljeno" FunctionName="ConsoleDatabaseModel.Store.upapljeno">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ConsoleDatabaseModel.upapljeno_Result">
+                <ScalarProperty Name="managerID" ColumnName="managerID" />
+                <ScalarProperty Name="pozicija" ColumnName="pozicija" />
+                <ScalarProperty Name="naziv" ColumnName="naziv" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="updateManager" FunctionName="ConsoleDatabaseModel.Store.updateManager" />
+          <FunctionImportMapping FunctionImportName="SelectAllKonzole" FunctionName="ConsoleDatabaseModel.Store.SelectAllKonzole">
+          </FunctionImportMapping>
+          <EntitySetMapping Name="Cjenovnik">
+            <EntityTypeMapping TypeName="ConsoleDatabaseModel.Cjenovnik">
+              <MappingFragment StoreEntitySet="Cjenovnik">
+                <ScalarProperty Name="Vrijeme_do" ColumnName="Vrijeme_do" />
+                <ScalarProperty Name="Vrijeme_od" ColumnName="Vrijeme_od" />
+                <ScalarProperty Name="Cijena" ColumnName="Cijena" />
+                <ScalarProperty Name="Konzola" ColumnName="Konzola" />
+                <ScalarProperty Name="CjenovnikID" ColumnName="CjenovnikID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="InsertCjenovnik" FunctionName="ConsoleDatabaseModel.Store.InsertCjenovnik" />
+          <FunctionImportMapping FunctionImportName="SELECTCjenovnik" FunctionName="ConsoleDatabaseModel.Store.SELECTCjenovnik">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SelectCjenovnikByID" FunctionName="ConsoleDatabaseModel.Store.SelectCjenovnikByID">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="obrisiCjenovnik" FunctionName="ConsoleDatabaseModel.Store.obrisiCjenovnik" />
+          <FunctionImportMapping FunctionImportName="UpdataCjenovnik" FunctionName="ConsoleDatabaseModel.Store.UpdataCjenovnik" />
+          <FunctionImportMapping FunctionImportName="UgasiSve" FunctionName="ConsoleDatabaseModel.Store.UgasiSve" />
+          <FunctionImportMapping FunctionImportName="CheckStatusKonzole" FunctionName="ConsoleDatabaseModel.Store.CheckStatusKonzole">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ConsoleDatabaseModel.CheckStatusKonzole_Result">
+                <ScalarProperty Name="managerID" ColumnName="managerID" />
+                <ScalarProperty Name="konzolaID" ColumnName="konzolaID" />
+                <ScalarProperty Name="pocetnoVrijme" ColumnName="pocetnoVrijme" />
+                <ScalarProperty Name="Zavrsetak" ColumnName="Zavrsetak" />
+                <ScalarProperty Name="Totaltime" ColumnName="Totaltime" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="pozicija" ColumnName="pozicija" />
+                <ScalarProperty Name="naziv" ColumnName="naziv" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="konzoleTV2" FunctionName="ConsoleDatabaseModel.Store.konzoleTV2">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="konzoleTV3" FunctionName="ConsoleDatabaseModel.Store.konzoleTV3">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="konzoleTV4" FunctionName="ConsoleDatabaseModel.Store.konzoleTV4">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="konzoleTV5" FunctionName="ConsoleDatabaseModel.Store.konzoleTV5">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="upaljena2" FunctionName="ConsoleDatabaseModel.Store.upaljena2" />
+          <FunctionImportMapping FunctionImportName="konzoleTV10" FunctionName="ConsoleDatabaseModel.Store.konzoleTV10">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="konzoleTV11" FunctionName="ConsoleDatabaseModel.Store.konzoleTV11">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="konzoleTV12" FunctionName="ConsoleDatabaseModel.Store.konzoleTV12">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="konzoleTV6" FunctionName="ConsoleDatabaseModel.Store.konzoleTV6">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="konzoleTV7" FunctionName="ConsoleDatabaseModel.Store.konzoleTV7">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="konzoleTV8" FunctionName="ConsoleDatabaseModel.Store.konzoleTV8">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="konzoleTV9" FunctionName="ConsoleDatabaseModel.Store.konzoleTV9">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="DodajKonzolu" FunctionName="ConsoleDatabaseModel.Store.DodajKonzolu" />
+          <FunctionImportMapping FunctionImportName="KonzolaPoTV" FunctionName="ConsoleDatabaseModel.Store.KonzolaPoTV">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="BrisiKonzolu" FunctionName="ConsoleDatabaseModel.Store.BrisiKonzolu" />
+          <EntitySetMapping Name="ListaKonzola">
+            <EntityTypeMapping TypeName="ConsoleDatabaseModel.ListaKonzola">
+              <MappingFragment StoreEntitySet="ListaKonzola">
+                <ScalarProperty Name="Naziv" ColumnName="Naziv" />
+                <ScalarProperty Name="ListaKonzolaID" ColumnName="ListaKonzolaID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="InsertKonzole" FunctionName="ConsoleDatabaseModel.Store.InsertKonzole" />
+          <FunctionImportMapping FunctionImportName="SveKonzole" FunctionName="ConsoleDatabaseModel.Store.SveKonzole">
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="IzvjestajPoDatumu" FunctionName="ConsoleDatabaseModel.Store.IzvjestajPoDatumu">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ConsoleDatabaseModel.IzvjestajPoDatumu_Result">
+                <ScalarProperty Name="Ime" ColumnName="Ime" />
+                <ScalarProperty Name="Prezime" ColumnName="Prezime" />
+                <ScalarProperty Name="datum" ColumnName="datum" />
+                <ScalarProperty Name="pocetnoVrijme" ColumnName="pocetnoVrijme" />
+                <ScalarProperty Name="Zavrsetak" ColumnName="Zavrsetak" />
+                <ScalarProperty Name="Totaltime" ColumnName="Totaltime" />
+                <ScalarProperty Name="cijena" ColumnName="cijena" />
+                <ScalarProperty Name="pozicija" ColumnName="pozicija" />
+                <ScalarProperty Name="naziv" ColumnName="naziv" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="TEst" FunctionName="ConsoleDatabaseModel.Store.TEst">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ConsoleDatabaseModel.TEst_Result">
+                <ScalarProperty Name="Ime" ColumnName="Ime" />
+                <ScalarProperty Name="Prezime" ColumnName="Prezime" />
+                <ScalarProperty Name="datum" ColumnName="datum" />
+                <ScalarProperty Name="pocetnoVrijme" ColumnName="pocetnoVrijme" />
+                <ScalarProperty Name="Zavrsetak" ColumnName="Zavrsetak" />
+                <ScalarProperty Name="Totaltime" ColumnName="Totaltime" />
+                <ScalarProperty Name="cijena" ColumnName="cijena" />
+                <ScalarProperty Name="pozicija" ColumnName="pozicija" />
+                <ScalarProperty Name="naziv" ColumnName="naziv" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="BrisiListaKonzola" FunctionName="ConsoleDatabaseModel.Store.BrisiListaKonzola" />
+          <FunctionImportMapping FunctionImportName="CijenCjenovnik" FunctionName="ConsoleDatabaseModel.Store.CijenCjenovnik" />
+          <FunctionImportMapping FunctionImportName="DeleteIzvjesta" FunctionName="ConsoleDatabaseModel.Store.DeleteIzvjesta" />
+          <FunctionImportMapping FunctionImportName="Ugasi" FunctionName="ConsoleDatabaseModel.Store.Ugasi" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
